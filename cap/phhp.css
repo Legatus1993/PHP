@@ -1,0 +1,21 @@
+/* php.css */
+body {
+	background-color: #F2F2F2;
+}
+
+.inputt {
+	border: solid red 1px;
+	display: block;
+	position: absolute;
+	margin-top: 250px;
+	margin-left: 500px;
+	
+}
+
+.outputt {
+	border: solid blue 1px;
+	display: block;
+	position: absolute;
+	
+	
+}
