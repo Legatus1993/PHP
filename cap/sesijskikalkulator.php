@@ -17,10 +17,15 @@ session_start();
 <input type="text" name="y"/>
 <input type="submit" value="="/>
 <?php 
+$greske = "";
 $rezultat="";
 if(isset($_GET["operacija"])) {
 $operacija=$_GET["operacija"];
-
+if(isset($_GET["x"]) && isset($_GET["y"])) {
+	if(is_numeric($_GET["x"]) && is_numeric($_GET["y"])) {
+		
+		
+		
 switch($operacija) {
 	
 	case "+" :
@@ -36,30 +41,45 @@ switch($operacija) {
 	$_SESSION["mnozenja"][] = strval($_GET["x"])." * ".strval($_GET["y"])." = ".strval($rezultat);
 	break;
 	case "/" :
+	if( !empty($_GET["x"]) && !empty($_GET["y"]) ) {
 	$rezultat=$_GET["x"]/$_GET["y"];
 	$_SESSION["dijeljenja"][] = strval($_GET["x"])." / ".strval($_GET["y"])." = ".strval($rezultat);
 	break;
+	}
+	else { $greske = "Dijeljenje sa nulom  nije definisano"; }
 	 default:
        $rezultat="0";
+
+	}
+	}
+	
+else {
+	$greske = "Niste unijeli odgovarajuce vrijednosti.";
 }
 }
+else {
+	$greske = "Molimo unesite oba broja.";
+}
+}
+
+									
 $arrRacunanja = array();
-if(!empty($_SESSION["sabiranja"])) {
+if(isset($_SESSION["sabiranja"])) {
 foreach ($_SESSION["sabiranja"] as $rez) {
     array_push($arrRacunanja, $rez);
 }
 }
-if(!empty($_SESSION["oduzimanja"])) {
+if(isset($_SESSION["oduzimanja"])) {
 foreach ($_SESSION["oduzimanja"] as $rez) {
     array_push($arrRacunanja, $rez);
 }
 }
-if(!empty($_SESSION["mnozenja"])) {
+if(isset($_SESSION["mnozenja"])) {
 foreach ($_SESSION["mnozenja"] as $rez) {
     array_push($arrRacunanja, $rez);
 }
 }
-if(!empty($_SESSION["dijeljenja"])) {
+if(isset($_SESSION["dijeljenja"])) {
 foreach ($_SESSION["dijeljenja"] as $rez) {
     array_push($arrRacunanja, $rez);
 }
@@ -69,12 +89,13 @@ foreach ($_SESSION["dijeljenja"] as $rez) {
 <input type="text" value="<?php echo $rezultat; ?>" />
 <textarea rows="10" cols="100">
 <?php
+if($greske == "") {
 foreach ($arrRacunanja as $svi) {
     echo $svi;	
 	echo "\n";
-
 }
-
+}
+else echo $greske;
 ?>
 </textarea>
 </form>
