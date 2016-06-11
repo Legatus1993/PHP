@@ -1,4 +1,6 @@
 <html>
+
+<!-- Mozes mijenjati i dodavati sve u htmlu samo ne diraj name i value -->
 <head>
 	<link type="text/css" rel="stylesheet" href="phhp.css"/>
 </head>
@@ -6,22 +8,27 @@
 <?php
 session_start();
 ?>
+<!-- Forma za unosenje brojeva i biranje operacije -->
 <form action="" method="GET">
+<!-- Prvi broj -->
 <input type="text" name="x"/>
+<!-- Biranje operacije -->
 <select name="operacija">
   <option name="sabiranje" value="+" >+</option>
   <option name="oduzimanje" value="-" >-</option>
   <option name="mnozenje" value="*">*</option>
   <option name="dijeljenje" value="/">/</option>
 </select>
+<!-- Drugi broj -->
 <input type="text" name="y"/>
+<!-- Dugme submit (=) za izracunavanje -->
 <input type="submit" value="="/>
 <?php 
 $greske = "";
 $rezultat="";
 if(isset($_GET["operacija"])) {
 $operacija=$_GET["operacija"];
-if(isset($_GET["x"]) && isset($_GET["y"])) {
+if(!empty($_GET["x"]) && !empty($_GET["y"]) && $_GET["x"] !== 0 && $_GET["y"] !== 0) {
 	if(is_numeric($_GET["x"]) && is_numeric($_GET["y"])) {
 		
 		
@@ -86,19 +93,25 @@ foreach ($_SESSION["dijeljenja"] as $rez) {
 }
 
 ?>
+<!-- Rezultati racunanja -->
 <input type="text" value="<?php echo $rezultat; ?>" />
-<textarea rows="10" cols="100">
+
+<!-- Istorija racunanja -->
+<textarea rows="10" cols="100">                                                                                  
 <?php
-if($greske == "") {
 foreach ($arrRacunanja as $svi) {
     echo $svi;	
 	echo "\n";
 }
-}
-else echo $greske;
 ?>
 </textarea>
 </form>
+<!-- Izbacivanje mogucih gresaka, ako budes mijenjao ili dodavao nesto dodaj iza size unutar " '' " -->
+<?php 
+if($greske !== "" ) {
+echo '<input type="text" name="greske" value="'.$greske.'" size="150px"/>';
+}
+?>																				
 </body>
 </html>
 
