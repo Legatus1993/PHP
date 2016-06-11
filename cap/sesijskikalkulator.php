@@ -2,16 +2,14 @@
 <head>
 	<link type="text/css" rel="stylesheet" href="phhp.css"/>
 </head>
-
 <body>
 <?php
 session_start();
 ?>
-<div class="inputt">
 <form action="" method="GET">
 <input type="text" name="x"/>
 <select name="operacija">
-  <option name="sabiranje" value="+" selected >+</option>
+  <option name="sabiranje" value="+" >+</option>
   <option name="oduzimanje" value="-" >-</option>
   <option name="mnozenje" value="*">*</option>
   <option name="dijeljenje" value="/">/</option>
@@ -19,42 +17,68 @@ session_start();
 <input type="text" name="y"/>
 <input type="submit" value="="/>
 <?php 
+$rezultat="";
+if(isset($_GET["operacija"])) {
 $operacija=$_GET["operacija"];
+
 switch($operacija) {
 	
 	case "+" :
 	$rezultat=$_GET["x"]+$_GET["y"];
-	$_SESSION["racunanja".$rezultat] = strval($_GET["x"])." + ".strval($_GET["y"])." = ".strval($rezultat)."  ";
+	$_SESSION["sabiranja"][] = strval($_GET["x"])." + ".strval($_GET["y"])." = ".strval($rezultat);
 	break;
 	case "-" :
 	$rezultat=$_GET["x"]-$_GET["y"];
-	$_SESSION["racunanja"].$rezultat = strval($_GET["x"])." - ".strval($_GET["y"])." = ".strval($rezultat)."  ";
+	$_SESSION["oduzimanja"][] = strval($_GET["x"])." - ".strval($_GET["y"])." = ".strval($rezultat);
 	break;
 	case "*" :
 	$rezultat=$_GET["x"]*$_GET["y"];
-	$_SESSION["racunanja".$rezultat] = strval($_GET["x"])." * ".strval($_GET["y"])." = ".strval($rezultat)."  "; 
+	$_SESSION["mnozenja"][] = strval($_GET["x"])." * ".strval($_GET["y"])." = ".strval($rezultat);
+	break;
 	case "/" :
 	$rezultat=$_GET["x"]/$_GET["y"];
-	$_SESSION["racunanja".$rezultat] = strval($_GET["x"])." / ".strval($_GET["y"])." = ".strval($rezultat)."  ";
+	$_SESSION["dijeljenja"][] = strval($_GET["x"])." / ".strval($_GET["y"])." = ".strval($rezultat);
 	break;
 	 default:
-       $rezultat="Molimo izaberite operaciju";
+       $rezultat="0";
 }
+}
+$arrRacunanja = array();
+if(!empty($_SESSION["sabiranja"])) {
+foreach ($_SESSION["sabiranja"] as $rez) {
+    array_push($arrRacunanja, $rez);
+}
+}
+if(!empty($_SESSION["oduzimanja"])) {
+foreach ($_SESSION["oduzimanja"] as $rez) {
+    array_push($arrRacunanja, $rez);
+}
+}
+if(!empty($_SESSION["mnozenja"])) {
+foreach ($_SESSION["mnozenja"] as $rez) {
+    array_push($arrRacunanja, $rez);
+}
+}
+if(!empty($_SESSION["dijeljenja"])) {
+foreach ($_SESSION["dijeljenja"] as $rez) {
+    array_push($arrRacunanja, $rez);
+}
+}
+
 ?>
 <input type="text" value="<?php echo $rezultat; ?>" />
-
-</form>
-</div>
-
-<div class="outputt">
-<textarea rows="4" cols="50">
+<textarea rows="10" cols="100">
 <?php
-foreach ($_SESSION as $rez) {
-	echo $rez; echo "\n";	
+foreach ($arrRacunanja as $svi) {
+    echo $svi;	
+	echo "\n";
+
 }
+
 ?>
 </textarea>
-</div>
-
+</form>
 </body>
 </html>
+
+ 
