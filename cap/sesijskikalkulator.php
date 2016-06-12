@@ -24,16 +24,15 @@ session_start();
 <!-- Dugme submit (=) za izracunavanje -->
 <input type="submit" value="=" name="izracunaj"/>
 <?php 
-$greske = "";             																								// Varijabla za moguce greske pri unosu
-$rezultat="";            																								//Varijabla za rezultate
+$greske = "";             																									// Varijabla za moguce greske pri unosu
+$rezultat="";            																									//Varijabla za rezultate
 if(isset($_POST["izracunaj"])) {                            																//Provjera submit dugmica	
 $operacija=$_POST["operacija"];																							
-if(!empty($_POST["x"]) && !empty($_POST["y"]) && $_POST["x"] !== 0 && $_POST["y"] !== 0) {									//Provjera dali je ista uneseno u polja
+if(isset($_POST["x"]) && isset($_POST["y"])) {									//Provjera dali je ista uneseno u polja
 	if(is_numeric($_POST["x"]) && is_numeric($_POST["y"])) {																//Provjera dali su unijeti brojevi
 		
 		
-		
-switch($operacija) {  																									//Racunanje i unos u sesiju
+switch($operacija) {  																										//Racunanje i unos u sesiju
 	
 	case "+" :
 	$rezultat=$_POST["x"]+$_POST["y"];
@@ -48,18 +47,15 @@ switch($operacija) {  																									//Racunanje i unos u sesiju
 	$_SESSION["mnozenja"][] = strval($_POST["x"])." * ".strval($_POST["y"])." = ".strval($rezultat);
 	break;
 	case "/" :
-	if( !empty($_POST["x"]) && !empty($_POST["y"]) ) {
-	$rezultat=$_POST["x"]/$_POST["y"];
-	$_SESSION["dijeljenja"][] = strval($_POST["x"])." / ".strval($_POST["y"])." = ".strval($rezultat);
-	break;
-	}
-	else { $greske = "Dijeljenje sa nulom  nije definisano"; }
-	 default:
-       $rezultat="0";
+	    if($_POST["x"] !=0 && $_POST["y"] !=0) {
+		$rezultat=$_POST["x"]/$_POST["y"];
+		$_SESSION["dijeljenja"][] = strval($_POST["x"])." / ".strval($_POST["y"])." = ".strval($rezultat);
+		break;
+		}
+		else { $greske = "Dijeljnje sa nulom nije definisano";}
 
 	}
 	}
-	
 else {																													//Izbacivanje greske ako uneseno nisu brojevi
 	$greske = "Niste unijeli odgovarajuce vrijednosti.";															
 }
@@ -67,7 +63,6 @@ else {																													//Izbacivanje greske ako uneseno nisu brojevi
 else {																													//Izbacivanje greske ako su polja prazna
 	$greske = "Molimo unesite oba broja.";																					
 }
-unset($_SERVER['QUERY_STRING']);
 }
 
 									
@@ -118,10 +113,11 @@ foreach ($arrRacunanja as $svi) {
 if(isset($_POST["pretrazi"])) {																							   //Pretrazivanje rezultata	
 foreach ($arrRacunanja as $rezovi) {
     $pretragaipo = explode (" = ", $rezovi);
-	if($pretragaipo[1] == $_POST["pretraga"])
+	if($pretragaipo[1] == $_POST["pretraga"]) {
     echo $rezovi;
 	echo "\n";
-}
+	}
+	}
 }
 ?>
 </textarea>
